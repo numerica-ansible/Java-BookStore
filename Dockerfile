@@ -1,22 +1,10 @@
-FROM maven:3.6-jdk-8-slim
+# Pull base image 
+#From tomcat:8-jre8
 
-WORKDIR /src/app/
+# Maintainer 
+#MAINTAINER "valaxytech@gmail.com"
+#COPY ./webapp.war /usr/local/tomcat/webapps
+#RUN cp -R /usr/local/tomcat/webapps.dist/* /usr/local/tomcat/webapps
+FROM fabric8/tomcat-9
 
-COPY ./pom.xml .
-
-RUN ["mkdir", "/home/projects"]
-
-RUN groupadd projects && useradd -g projects projects && \
-  chown -R projects:projects /src/app && \
-  chown -R projects:projects /home/projects
-
-USER projects
-
-RUN ["mvn", "clean"]
-
-RUN ["mvn", "de.qaware.maven:go-offline-maven-plugin:resolve-dependencies", "-P", "integration"]
-
-COPY . .
-
-ENTRYPOINT ["sh"]
-
+COPY *.war /opt/tomcat/webapps/
